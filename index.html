@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#7c3aed" />
+<title>Auto Test · Hábitos Saludables</title>
+<style>
+  :root{
+    --violeta:#7c3aed;
+    --violeta-osc:#5b21b6;
+    --rojo:#ef4444;
+    --amarillo:#f59e0b;
+    --verde:#10b981;
+    --gris:#f3f4f6;
+    --texto:#1f2937;
+    --texto-suave:#4b5563;
+    --blanco:#ffffff;
+    --sombra:0 6px 20px rgba(0,0,0,.08);
+    --radio:18px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; padding:0;}
+  body{
+    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background:linear-gradient(160deg,#ede9fe 0%, #f5f3ff 40%, #ffffff 100%);
+    color:var(--texto);
+    min-height:100dvh;
+    line-height:1.5;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  .app{
+    max-width:520px;
+    margin:0 auto;
+    padding:16px 14px 40px;
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ---------- Encabezado ---------- */
+  header.top{
+    text-align:center;
+    padding:14px 6px 10px;
+  }
+  header.top h1{
+    font-size:1.35rem;
+    margin:0 0 6px;
+    color:var(--violeta-osc);
+    letter-spacing:-.3px;
+  }
+  header.top p{
+    margin:0;
+    font-size:.92rem;
+    color:var(--texto-suave);
+  }
+
+  /* ---------- Barra de progreso ---------- */
+  .progress-wrap{
+    background:#e5e7eb;
+    border-radius:999px;
+    height:10px;
+    overflow:hidden;
+    margin:14px 0 18px;
+  }
+  .progress-bar{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,var(--violeta),#a78bfa);
+    border-radius:999px;
+    transition:width .35s ease;
+  }
+
+  /* ---------- Tarjeta ---------- */
+  .card{
+    background:var(--blanco);
+    border-radius:var(--radio);
+    box-shadow:var(--sombra);
+    padding:20px 18px;
+    margin-bottom:16px;
+    animation:fade .35s ease;
+  }
+  @keyframes fade{
+    from{opacity:0; transform:translateY(8px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  .card h2{
+    font-size:1.15rem;
+    margin:0 0 14px;
+    color:var(--violeta-osc);
+  }
+  .card p.intro{
+    font-size:.95rem;
+    color:var(--texto-suave);
+    margin:0 0 16px;
+  }
+
+  /* ---------- Campos de texto ---------- */
+  .field{margin-bottom:14px;}
+  .field label{
+    display:block;
+    font-size:.9rem;
+    font-weight:600;
+    color:var(--texto-suave);
+    margin-bottom:6px;
+  }
+  .field input, .field textarea{
+    width:100%;
+    padding:13px 14px;
+    font-size:1rem;
+    border:2px solid #e5e7eb;
+    border-radius:14px;
+    background:#fafafa;
+    font-family:inherit;
+    transition:border .2s, background .2s;
+    -webkit-appearance:none;
+    appearance:none;
+  }
+  .field input:focus, .field textarea:focus{
+    outline:none;
+    border-color:var(--violeta);
+    background:#fff;
+  }
+  .field textarea{resize:vertical; min-height:70px;}
+
+  /* ---------- Opciones de respuesta ---------- */
+  .opciones{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .opcion{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:15px 16px;
+    border-radius:16px;
+    border:2px solid #e5e7eb;
+    background:#fafafa;
+    font-size:1rem;
+    font-weight:500;
+    cursor:pointer;
+    transition:transform .12s, border .2s, background .2s;
+    min-height:56px;
+    user-select:none;
+  }
+  .opcion:active{transform:scale(.98);}
+  .opcion .circulo{
+    width:22px; height:22px;
+    border-radius:50%;
+    border:2px solid #cbd5e1;
+    flex:0 0 22px;
+    display:flex; align-items:center; justify-content:center;
+    transition:all .2s;
+  }
+  .opcion .circulo::after{
+    content:"";
+    width:10px; height:10px;
+    border-radius:50%;
+    background:transparent;
+    transition:background .2s;
+  }
+  .opcion.sel-rojo{border-color:var(--rojo); background:#fef2f2;}
+  .opcion.sel-rojo .circulo{border-color:var(--rojo);}
+  .opcion.sel-rojo .circulo::after{background:var(--rojo);}
+  .opcion.sel-amarillo{border-color:var(--amarillo); background:#fffbeb;}
+  .opcion.sel-amarillo .circulo{border-color:var(--amarillo);}
+  .opcion.sel-amarillo .circulo::after{background:var(--amarillo);}
+  .opcion.sel-verde{border-color:var(--verde); background:#ecfdf5;}
+  .opcion.sel-verde .circulo{border-color:var(--verde);}
+  .opcion.sel-verde .circulo::after{background:var(--verde);}
+
+  /* ---------- Botones ---------- */
+  .btn{
+    display:block;
+    width:100%;
+    padding:16px;
+    font-size:1.05rem;
+    font-weight:700;
+    border:none;
+    border-radius:16px;
+    background:var(--violeta);
+    color:#fff;
+    cursor:pointer;
+    transition:background .2s, transform .12s;
+    min-height:54px;
+    font-family:inherit;
+    box-shadow:0 4px 14px rgba(124,58,237,.3);
+  }
+  .btn:active{transform:scale(.98); background:var(--violeta-osc);}
+  .btn:disabled{background:#c4b5fd; box-shadow:none; cursor:not-allowed;}
+  .btn.secundario{
+    background:#fff;
+    color:var(--violeta-osc);
+    border:2px solid var(--violeta);
+    box-shadow:none;
+  }
+  .btn.secundario:active{background:#f5f3ff;}
+  .btn-row{
+    display:flex;
+    gap:10px;
+    margin-top:8px;
+  }
+  .btn-row .btn{flex:1;}
+
+  /* ---------- Resultado ---------- */
+  .resultado{
+    text-align:center;
+    padding:8px 4px;
+  }
+  .resultado .emoji{
+    font-size:3rem;
+    line-height:1;
+    margin-bottom:8px;
+  }
+  .resultado h2{
+    font-size:1.4rem;
+    margin:0 0 10px;
+  }
+  .resultado p{
+    font-size:1rem;
+    color:var(--texto-suave);
+    margin:0 0 14px;
+  }
+  .badge{
+    display:inline-block;
+    padding:8px 18px;
+    border-radius:999px;
+    font-weight:700;
+    font-size:1rem;
+    margin-bottom:14px;
+    color:#fff;
+  }
+  .badge.rojo{background:var(--rojo);}
+  .badge.amarillo{background:var(--amarillo);}
+  .badge.verde{background:var(--verde);}
+
+  .resumen{
+    text-align:left;
+    background:var(--gris);
+    border-radius:14px;
+    padding:14px;
+    font-size:.9rem;
+    color:var(--texto-suave);
+    margin-top:10px;
+  }
+  .resumen strong{color:var(--texto);}
+
+  /* ---------- Aviso importante ---------- */
+  .aviso{
+    background:#fef3c7;
+    border-left:5px solid var(--amarillo);
+    border-radius:12px;
+    padding:12px 14px;
+    font-size:.88rem;
+    color:#78350f;
+    margin-top:16px;
+    text-align:left;
+  }
+  .aviso strong{color:#92400e;}
+
+  /* ---------- Pie ---------- */
+  footer.pie{
+    text-align:center;
+    font-size:.78rem;
+    color:#9ca3af;
+    margin-top:auto;
+    padding-top:20px;
+  }
+
+  /* ---------- Utilidades ---------- */
+  .oculto{display:none !important;}
+  @media (max-width:340px){
+    .card{padding:16px 14px;}
+    header.top h1{font-size:1.15rem;}
+    .opcion{font-size:.94rem; padding:13px 12px;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="top">
+    <h1>🌱 Auto Test · Hábitos Saludables</h1>
+    <p>Para niños, niñas y adolescentes</p>
+  </header>
+
+  <div class="progress-wrap" id="progWrap">
+    <div class="progress-bar" id="progBar"></div>
+  </div>
+
+  <main id="main">
+
+    <!-- ================= PANTALLA 0: BIENVENIDA ================= -->
+    <section class="card" id="pantalla-bienvenida">
+      <h2>¡Hola! 👋</h2>
+      <p class="intro">
+        Esta es una herramienta pensada para que puedas <strong>autoevaluar</strong> algunas
+        cosas de tu día a día. No hay respuestas correctas ni incorrectas: solo queremos
+        que puedas <strong>pensar y reflexionar</strong> sobre tus hábitos.
+      </p>
+      <div class="aviso">
+        <strong>Muy importante:</strong><br>
+        • Es personal y confidencial. Respondé con sinceridad.<br>
+        • Nada debe asustarte. Solo hay que ocuparse para estar mejor.<br>
+        • Pedir ayuda es un acto de amor y valentía. No estás solo/a.<br>
+        • Tu salud mental es tan importante como tu salud física.
+      </div>
+      <button class="btn" style="margin-top:18px" onclick="irADatos()">Comenzar ✨</button>
+    </section>
+
+    <!-- ================= PANTALLA 1: DATOS PERSONALES ================= -->
+    <section class="card oculto" id="pantalla-datos">
+      <h2>Contame un poco de vos</h2>
+      <p class="intro">Estos datos son solo para personalizar el test. No se guardan en ningún servidor.</p>
+
+      <div class="field">
+        <label for="nombre">Me gusta que me llamen</label>
+        <input type="text" id="nombre" placeholder="Tu nombre o apodo" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="edad">Edad</label>
+        <input type="number" id="edad" placeholder="Ej: 14" min="6" max="99" inputmode="numeric" />
+      </div>
+      <div class="field">
+        <label for="gusta">Me gusta</label>
+        <input type="text" id="gusta" placeholder="Ej: jugar al fútbol, dibujar..." autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="sueno">Sueño con</label>
+        <input type="text" id="sueno" placeholder="Ej: ser veterinaria/o..." autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="miedo">Mi mayor miedo es</label>
+        <input type="text" id="miedo" placeholder="Ej: hablar en público..." autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="creo">Creo que soy</label>
+        <input type="text" id="creo" placeholder="Ej: simpática/o, curiosa/o..." autocomplete="off" />
+      </div>
+
+      <button class="btn" onclick="empezarPreguntas()">Ir a las preguntas ➡️</button>
+    </section>
+
+    <!-- ================= PANTALLA 2: PREGUNTAS ================= -->
+    <section class="card oculto" id="pantalla-preguntas">
+      <h2 id="pregunta-texto">Pregunta</h2>
+      <p class="intro" id="pregunta-num"></p>
+      <div class="opciones" id="opciones"></div>
+      <div class="btn-row">
+        <button class="btn secundario" id="btnAtras" onclick="preguntaAnterior()">← Atrás</button>
+        <button class="btn" id="btnSiguiente" onclick="siguientePregunta()" disabled>Siguiente →</button>
+      </div>
+    </section>
+
+    <!-- ================= PANTALLA 3: RESULTADO ================= -->
+    <section class="card oculto" id="pantalla-resultado">
+      <div class="resultado" id="resultado-contenido"></div>
+      <div class="btn-row" style="margin-top:18px">
+        <button class="btn secundario" onclick="reiniciar()">🔄 Reiniciar</button>
+        <button class="btn" onclick="compartir()">📤 Compartir</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="pie">
+    Hecho con 💜 para acompañar a chicas y chicos
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   DATOS DEL TEST
+   ============================================================ */
+const PREGUNTAS = [
+  {
+    t: "¿Necesitás usar el celular, la televisión o algún aparato electrónico antes de dormir para poder conciliar el sueño?",
+    o: [
+      {txt:"Sí",   color:"rojo"},
+      {txt:"A veces", color:"amarillo"},
+      {txt:"No",   color:"verde"}
+    ]
+  },
+  {
+    t: "Y al despertar… ¿lo primero que hacés es tomar y mirar el celu?",
+    o: [
+      {txt:"Sí",   color:"rojo"},
+      {txt:"A veces", color:"amarillo"},
+      {txt:"No",   color:"verde"}
+    ]
+  },
+  {
+    t: "¿Te lavás los dientes diariamente?",
+    o: [
+      {txt:"No",   color:"rojo"},
+      {txt:"A veces", color:"amarillo"},
+      {txt:"Sí",   color:"verde"}
+    ]
+  },
+  {
+    t: "¿Te lavás las manos antes de cada comida?",
+    o: [
+      {txt:"No",   color:"rojo"},
+      {txt:"A veces", color:"amarillo"},
+      {txt:"Sí",   color:"verde"}
+    ]
+  },
+  {
+    t: "¿Tomás agua diariamente, 2 litros mínimo al día?",
+    o: [
+      {txt:"No",   color:"rojo"},
+      {txt:"A veces", color:"amarillo"},
+      {txt:"Sí",   color:"verde"}
+    ]
+  },
+  {
+    t: "¿Tenés amigos/as con quién poder compartir momentos?",
+    o: [
+      {txt:"No",   color:"rojo"},
+      {txt:"A veces", color:"amarillo"},
+      {txt:"Sí",   color:"verde"}
+    ]
+  },
+  {
+    t: "¿Contás con alguna persona mayor, de confianza, a quién le puedas contar lo que te sucede?",
+    o: [
+      {txt:"No",   color:"rojo"},
+      {txt:"No lo sé", color:"amarillo"},
+      {txt:"Sí",   color:"verde"}
+    ]
+  },
+  {
+    t: "¿Sentís angustia o desmotivación gran parte del día?",
+    o: [
+      {txt:"Sí",   color:"rojo"},
+      {txt:"A veces", color:"amarillo"},
+      {txt:"No",   color:"verde"}
+    ]
+  },
+  {
+    t: "¿Hacés alguna actividad recreativa que te guste y dónde te dediques tiempo a vos y a disfrutar de eso?",
+    o: [
+      {txt:"No",   color:"rojo"},
+      {txt:"A veces", color:"amarillo"},
+      {txt:"Sí",   color:"verde"}
+    ]
+  },
+  {
+    t: "¿Sentís que hacés cosas que no elegís hacer o no te gustan, pero lo hacés para agradar a quienes te rodean?",
+    o: [
+      {txt:"Sí",   color:"rojo"},
+      {txt:"A veces", color:"amarillo"},
+      {txt:"No",   color:"verde"}
+    ]
+  }
+];
+
+/* ============================================================
+   ESTADO
+   ============================================================ */
+let indice = 0;                 // pregunta actual
+let respuestas = [];            // colores elegidos
+let datos = {};                 // datos personales
+const $ = id => document.getElementById(id);
+
+/* ============================================================
+   NAVEGACIÓN ENTRE PANTALLAS
+   ============================================================ */
+function mostrarPantalla(id){
+  ["pantalla-bienvenida","pantalla-datos","pantalla-preguntas","pantalla-resultado"]
+    .forEach(p => $(p).classList.add("oculto"));
+  $(id).classList.remove("oculto");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function irADatos(){
+  mostrarPantalla("pantalla-datos");
+}
+
+function empezarPreguntas(){
+  datos = {
+    nombre: $("nombre").value.trim() || "amiguito/a",
+    edad:   $("edad").value.trim(),
+    gusta:  $("gusta").value.trim(),
+    sueno:  $("sueno").value.trim(),
+    miedo:  $("miedo").value.trim(),
+    creo:   $("creo").value.trim()
+  };
+  indice = 0;
+  respuestas = new Array(PREGUNTAS.length).fill(null);
+  mostrarPantalla("pantalla-preguntas");
+  renderPregunta();
+}
+
+/* ============================================================
+   RENDER DE PREGUNTAS
+   ============================================================ */
+function renderPregunta(){
+  const p = PREGUNTAS[indice];
+  $("pregunta-texto").textContent = p.t;
+  $("pregunta-num").textContent = `Pregunta ${indice+1} de ${PREGUNTAS.length}`;
+
+  const cont = $("opciones");
+  cont.innerHTML = "";
+  p.o.forEach((op, i) => {
+    const div = document.createElement("div");
+    div.className = "opcion";
+    div.setAttribute("role","button");
+    div.setAttribute("tabindex","0");
+    div.innerHTML = `<span class="circulo"></span><span>${op.txt}</span>`;
+
+    if(respuestas[indice] === op.color){
+      div.classList.add("sel-" + op.color);
+    }
+
+    const elegir = () => {
+      respuestas[indice] = op.color;
+      // limpiar selección previa
+      [...cont.children].forEach(c => {
+        c.classList.remove("sel-rojo","sel-amarillo","sel-verde");
+      });
+      div.classList.add("sel-" + op.color);
+      $("btnSiguiente").disabled = false;
+    };
+
+    div.addEventListener("click", elegir);
+    div.addEventListener("keydown", e => {
+      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); elegir(); }
+    });
+
+    cont.appendChild(div);
+  });
+
+  $("btnAtras").style.visibility = indice === 0 ? "hidden" : "visible";
+  $("btnSiguiente").disabled = !respuestas[indice];
+  $("btnSiguiente").textContent = indice === PREGUNTAS.length - 1 ? "Ver resultado ✅" : "Siguiente →";
+
+  actualizarProgreso();
+}
+
+function actualizarProgreso(){
+  const pct = ((indice) / PREGUNTAS.length) * 100;
+  $("progBar").style.width = pct + "%";
+}
+
+function siguientePregunta(){
+  if(!respuestas[indice]) return;
+  if(indice < PREGUNTAS.length - 1){
+    indice++;
+    renderPregunta();
+  } else {
+    mostrarResultado();
+  }
+}
+
+function preguntaAnterior(){
+  if(indice > 0){
+    indice--;
+    renderPregunta();
+  }
+}
+
+/* ============================================================
+   RESULTADO
+   ============================================================ */
+function mostrarResultado(){
+  $("progBar").style.width = "100%";
+  mostrarPantalla("pantalla-resultado");
+
+  // Contar colores
+  const conteo = {rojo:0, amarillo:0, verde:0};
+  respuestas.forEach(c => { if(c) conteo[c]++; });
+
+  // Determinar dominante (con prioridad: rojo > amarillo > verde si hay empate)
+  let dominante = "verde";
+  if(conteo.rojo >= conteo.amarillo && conteo.rojo >= conteo.verde && conteo.rojo > 0){
+    dominante = "rojo";
+  } else if(conteo.amarillo >= conteo.verde && conteo.amarillo > 0){
+    dominante = "amarillo";
+  }
+
+  const info = {
+    rojo: {
+      emoji:"🔴",
+      titulo:"¡A ocuparse!",
+      badge:"Rojo · Debo ocuparme",
+      mensaje:"Hay varias cosas en tu día a día que no te están haciendo bien. No estás solo/a: pedir ayuda es un acto de valentía y amor propio. Hablá con un adulto de confianza, con tu familia o con un profesional. Merecés estar mejor. 💜"
+    },
+    amarillo: {
+      emoji:"🟡",
+      titulo:"Estar alerta",
+      badge:"Amarillo · Estar alerta",
+      mensaje:"Hay algunas señales que conviene mirar con atención. Estás a tiempo de modificar hábitos y sumar apoyos. Prestá atención a cómo te sentís y animate a pedir ayuda si la necesitás. ¡No estás solo/a! 🌟"
+    },
+    verde: {
+      emoji:"🟢",
+      titulo:"¡Seguí así!",
+      badge:"Verde · Seguir así",
+      mensaje:"¡Felicitaciones! Tus hábitos saludables están presentes. Seguí cuidándote, disfrutando de lo que te gusta y manteniendo tus vínculos. Y si algún día algo no está bien, ya sabés: pedir ayuda siempre es válido. 💚"
+    }
+  }[dominante];
+
+  const nombre = datos.nombre || "amiguito/a";
+  const resumen = respuestas.map((c,i) => {
+    const emoji = c === "rojo" ? "🔴" : c === "amarillo" ? "🟡" : "🟢";
+    return `${emoji} P${i+1}`;
+  }).join("  ");
+
+  $("resultado-contenido").innerHTML = `
+    <div class="emoji">${info.emoji}</div>
+    <h2>${info.titulo}</h2>
+    <span class="badge ${dominante}">${info.badge}</span>
+    <p>${info.mensaje}</p>
+    <div class="resumen">
+      <strong>${nombre}</strong>${datos.edad ? `, ${datos.edad} años` : ""}<br>
+      ${datos.gusta ? `💚 Le gusta: ${datos.gusta}<br>` : ""}
+      ${datos.sueno ? `✨ Sueña con: ${datos.sueno}<br>` : ""}
+      ${datos.miedo ? `😨 Su mayor miedo: ${datos.miedo}<br>` : ""}
+      ${datos.creo ? `🌸 Cree que es: ${datos.creo}<br>` : ""}
+      <hr style="border:none;border-top:1px solid #e5e7eb;margin:10px 0">
+      <strong>Conteo:</strong> 🔴 ${conteo.rojo} · 🟡 ${conteo.amarillo} · 🟢 ${conteo.verde}<br>
+      <small>${resumen}</small>
+    </div>
+    <div class="aviso">
+      <strong>Recordá:</strong> este test no reemplaza la consulta con un profesional.
+      Si sentís que necesitás ayuda, hablá con un adulto de confianza o comunicate
+      con una línea de ayuda de tu país. 💜
+    </div>
+  `;
+}
+
+/* ============================================================
+   REINICIAR Y COMPARTIR
+   ============================================================ */
+function reiniciar(){
+  indice = 0;
+  respuestas = [];
+  datos = {};
+  ["nombre","edad","gusta","sueno","miedo","creo"].forEach(id => $(id).value = "");
+  $("progBar").style.width = "0%";
+  mostrarPantalla("pantalla-bienvenida");
+}
+
+async function compartir(){
+  const texto = `Hice el Auto Test de Hábitos Saludables 🌱. ¡Vos también podés hacerlo y reflexionar sobre tus hábitos!`;
+  const url = window.location.href;
+  if(navigator.share){
+    try{
+      await navigator.share({ title:"Auto Test · Hábitos Saludables", text:texto, url:url });
+    }catch(e){ /* usuario canceló */ }
+  } else {
+    // Fallback: copiar al portapapeles
+    try{
+      await navigator.clipboard.writeText(texto + " " + url);
+      alert("¡Enlace copiado al portapapeles! 📋");
+    }catch(e){
+      alert("No se pudo compartir automáticamente. Copiá el enlace de la barra de direcciones. 🔗");
+    }
+  }
+}
+
+/* ============================================================
+   INICIO
+   ============================================================ */
+document.addEventListener("DOMContentLoaded", () => {
+  mostrarPantalla("pantalla-bienvenida");
+});
+</script>
+</body>
+</html>
