@@ -259,13 +259,59 @@
   }
   .aviso strong{color:#92400e;}
 
-  /* ---------- Pie ---------- */
+  /* ---------- Pie / Créditos ---------- */
   footer.pie{
     text-align:center;
     font-size:.78rem;
     color:#9ca3af;
     margin-top:auto;
-    padding-top:20px;
+    padding-top:24px;
+  }
+  .creditos{
+    background:#f5f3ff;
+    border-radius:14px;
+    padding:14px 16px;
+    font-size:.82rem;
+    color:var(--texto-suave);
+    text-align:center;
+    line-height:1.6;
+    margin-bottom:10px;
+  }
+  .creditos strong{color:var(--violeta-osc);}
+  .creditos a{
+    color:var(--violeta);
+    text-decoration:none;
+    font-weight:600;
+    word-break:break-word;
+  }
+  .creditos a:active{opacity:.7;}
+  .creditos .firma{
+    display:block;
+    margin-top:10px;
+    font-size:.92rem;
+    color:var(--violeta-osc);
+    font-weight:700;
+  }
+  .creditos .rol{
+    display:block;
+    margin-top:2px;
+    font-size:.82rem;
+    color:var(--texto-suave);
+    font-style:italic;
+    font-weight:500;
+  }
+  .creditos .meta{
+    display:block;
+    margin-top:6px;
+    font-size:.78rem;
+    color:var(--texto-suave);
+  }
+  .mini-firma{
+    display:block;
+    margin-top:8px;
+    font-size:.78rem;
+    color:var(--violeta-osc);
+    font-weight:600;
   }
 
   /* ---------- Utilidades ---------- */
@@ -274,6 +320,7 @@
     .card{padding:16px 14px;}
     header.top h1{font-size:1.15rem;}
     .opcion{font-size:.94rem; padding:13px 12px;}
+    .creditos{font-size:.78rem; padding:12px 12px;}
   }
 </style>
 </head>
@@ -364,8 +411,19 @@
 
   </main>
 
+  <!-- ================= CRÉDITOS (al final de todo) ================= -->
   <footer class="pie">
-    Hecho con 💜 para acompañar a chicas y chicos
+    <div class="creditos">
+      Este es un recurso de uso personal y disponible como herramienta para
+      introducir talleres o espacios educativos o profesionales.
+      <span class="firma">Creado por Donato Balbi</span>
+      <span class="rol">Estudiante de Desarollo de Software</span>
+      <span class="meta">
+        📧 <a href="mailto:donatobalbi17@gmail.com">donatobalbi17@gmail.com</a><br>
+        📍 Rosario, Argentina · 📅 12/10/2026
+      </span>
+    </div>
+    <span class="mini-firma">Hecho con 💜 para acompañar a chicas y chicos</span>
   </footer>
 </div>
 
