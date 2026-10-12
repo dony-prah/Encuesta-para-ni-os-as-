@@ -9,6 +9,7 @@
   :root{
     --violeta:#7c3aed;
     --violeta-osc:#5b21b6;
+    --violeta-suave:#ede9fe;
     --rojo:#ef4444;
     --amarillo:#f59e0b;
     --verde:#10b981;
@@ -123,7 +124,7 @@
   }
   .field textarea{resize:vertical; min-height:70px;}
 
-  /* ---------- Opciones de respuesta ---------- */
+  /* ---------- Opciones de respuesta (NEUTRAL durante la encuesta) ---------- */
   .opciones{
     display:flex;
     flex-direction:column;
@@ -139,6 +140,7 @@
     background:#fafafa;
     font-size:1rem;
     font-weight:500;
+    color:var(--texto);
     cursor:pointer;
     transition:transform .12s, border .2s, background .2s;
     min-height:56px;
@@ -160,15 +162,12 @@
     background:transparent;
     transition:background .2s;
   }
-  .opcion.sel-rojo{border-color:var(--rojo); background:#fef2f2;}
-  .opcion.sel-rojo .circulo{border-color:var(--rojo);}
-  .opcion.sel-rojo .circulo::after{background:var(--rojo);}
-  .opcion.sel-amarillo{border-color:var(--amarillo); background:#fffbeb;}
-  .opcion.sel-amarillo .circulo{border-color:var(--amarillo);}
-  .opcion.sel-amarillo .circulo::after{background:var(--amarillo);}
-  .opcion.sel-verde{border-color:var(--verde); background:#ecfdf5;}
-  .opcion.sel-verde .circulo{border-color:var(--verde);}
-  .opcion.sel-verde .circulo::after{background:var(--verde);}
+  .opcion.sel{
+    border-color:var(--violeta);
+    background:var(--violeta-suave);
+  }
+  .opcion.sel .circulo{border-color:var(--violeta);}
+  .opcion.sel .circulo::after{background:var(--violeta);}
 
   /* ---------- Botones ---------- */
   .btn{
@@ -246,6 +245,91 @@
   }
   .resumen strong{color:var(--texto);}
 
+  /* ---------- Detalle de respuestas (acordeón) ---------- */
+  .detalle{
+    margin-top:14px;
+    text-align:left;
+    border:2px solid var(--violeta-suave);
+    border-radius:14px;
+    overflow:hidden;
+    background:#fff;
+  }
+  .detalle summary{
+    list-style:none;
+    cursor:pointer;
+    padding:14px 16px;
+    background:var(--violeta-suave);
+    color:var(--violeta-osc);
+    font-weight:700;
+    font-size:.95rem;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    user-select:none;
+  }
+  .detalle summary::-webkit-details-marker{display:none;}
+  .detalle summary::after{
+    content:"▾";
+    font-size:1rem;
+    transition:transform .25s;
+  }
+  .detalle[open] summary::after{transform:rotate(180deg);}
+  .detalle .lista{
+    padding:6px 12px 12px;
+  }
+  .detalle .item{
+    padding:12px 4px;
+    border-bottom:1px solid #f1f5f9;
+    font-size:.86rem;
+    color:var(--texto-suave);
+    line-height:1.45;
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+  }
+  .detalle .item:last-child{border-bottom:none;}
+  .detalle .item .punto{
+    flex:0 0 14px;
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    margin-top:4px;
+    box-shadow:0 0 0 3px rgba(0,0,0,.04);
+  }
+  .detalle .item .punto.rojo{background:var(--rojo);}
+  .detalle .item .punto.amarillo{background:var(--amarillo);}
+  .detalle .item .punto.verde{background:var(--verde);}
+  .detalle .item .texto b{
+    color:var(--texto);
+    font-weight:600;
+    display:block;
+    margin-bottom:2px;
+  }
+  .detalle .item .respuesta{
+    font-style:italic;
+    color:var(--violeta-osc);
+  }
+  .detalle .leyenda{
+    padding:10px 14px 14px;
+    font-size:.78rem;
+    color:var(--texto-suave);
+    background:#fafafa;
+    border-top:1px solid #f1f5f9;
+    text-align:center;
+  }
+  .detalle .leyenda span{
+    display:inline-block;
+    margin:2px 6px;
+  }
+  .detalle .leyenda .punto{
+    display:inline-block;
+    width:10px; height:10px;
+    border-radius:50%;
+    margin-right:4px;
+    vertical-align:middle;
+  }
+
   /* ---------- Aviso importante ---------- */
   .aviso{
     background:#fef3c7;
@@ -306,6 +390,21 @@
     font-size:.78rem;
     color:var(--texto-suave);
   }
+  .qr-bloque{
+    margin-top:14px;
+    text-align:center;
+  }
+  .qr-bloque #qrcode{
+    display:inline-block;
+    padding:8px;
+    background:#fff;
+    border-radius:10px;
+  }
+  .qr-bloque .qr-texto{
+    font-size:.75rem;
+    color:var(--texto-suave);
+    margin-top:6px;
+  }
   .mini-firma{
     display:block;
     margin-top:8px;
@@ -321,6 +420,7 @@
     header.top h1{font-size:1.15rem;}
     .opcion{font-size:.94rem; padding:13px 12px;}
     .creditos{font-size:.78rem; padding:12px 12px;}
+    .detalle .item{font-size:.82rem;}
   }
 </style>
 </head>
@@ -417,15 +517,23 @@
       Este es un recurso de uso personal y disponible como herramienta para
       introducir talleres o espacios educativos o profesionales.
       <span class="firma">Creado por Donato Balbi</span>
-      <span class="rol">Estudiante de Desarollo de Software</span>
+      <span class="rol">Estudiante de Desarrollo de Software</span>
       <span class="meta">
         📧 <a href="mailto:donatobalbi17@gmail.com">donatobalbi17@gmail.com</a><br>
         📍 Rosario, Argentina · 📅 12/10/2026
       </span>
+
+      <div class="qr-bloque">
+        <div id="qrcode"></div>
+        <div class="qr-texto">📱 Escaneá para compartir el test</div>
+      </div>
     </div>
     <span class="mini-firma">Hecho con 💜 para acompañar a chicas y chicos</span>
   </footer>
 </div>
+
+<!-- Librería para generar el QR -->
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
 <script>
 /* ============================================================
@@ -518,7 +626,7 @@ const PREGUNTAS = [
    ESTADO
    ============================================================ */
 let indice = 0;
-let respuestas = [];
+let respuestas = [];   // guardamos el ÍNDICE de la opción elegida
 let datos = {};
 const $ = id => document.getElementById(id);
 
@@ -552,7 +660,7 @@ function empezarPreguntas(){
 }
 
 /* ============================================================
-   RENDER DE PREGUNTAS
+   RENDER DE PREGUNTAS (selección NEUTRAL)
    ============================================================ */
 function renderPregunta(){
   const p = PREGUNTAS[indice];
@@ -568,16 +676,14 @@ function renderPregunta(){
     div.setAttribute("tabindex","0");
     div.innerHTML = `<span class="circulo"></span><span>${op.txt}</span>`;
 
-    if(respuestas[indice] === op.color){
-      div.classList.add("sel-" + op.color);
+    if(respuestas[indice] === i){
+      div.classList.add("sel");
     }
 
     const elegir = () => {
-      respuestas[indice] = op.color;
-      [...cont.children].forEach(c => {
-        c.classList.remove("sel-rojo","sel-amarillo","sel-verde");
-      });
-      div.classList.add("sel-" + op.color);
+      respuestas[indice] = i;
+      [...cont.children].forEach(c => c.classList.remove("sel"));
+      div.classList.add("sel");
       $("btnSiguiente").disabled = false;
     };
 
@@ -590,7 +696,7 @@ function renderPregunta(){
   });
 
   $("btnAtras").style.visibility = indice === 0 ? "hidden" : "visible";
-  $("btnSiguiente").disabled = !respuestas[indice];
+  $("btnSiguiente").disabled = respuestas[indice] === null;
   $("btnSiguiente").textContent = indice === PREGUNTAS.length - 1 ? "Ver resultado ✅" : "Siguiente →";
 
   actualizarProgreso();
@@ -602,7 +708,7 @@ function actualizarProgreso(){
 }
 
 function siguientePregunta(){
-  if(!respuestas[indice]) return;
+  if(respuestas[indice] === null) return;
   if(indice < PREGUNTAS.length - 1){
     indice++;
     renderPregunta();
@@ -619,14 +725,16 @@ function preguntaAnterior(){
 }
 
 /* ============================================================
-   RESULTADO
+   RESULTADO (acá SÍ se revela el color)
    ============================================================ */
 function mostrarResultado(){
   $("progBar").style.width = "100%";
   mostrarPantalla("pantalla-resultado");
 
+  const colores = respuestas.map((idx, i) => PREGUNTAS[i].o[idx]?.color || null);
+
   const conteo = {rojo:0, amarillo:0, verde:0};
-  respuestas.forEach(c => { if(c) conteo[c]++; });
+  colores.forEach(c => { if(c) conteo[c]++; });
 
   let dominante = "verde";
   if(conteo.rojo >= conteo.amarillo && conteo.rojo >= conteo.verde && conteo.rojo > 0){
@@ -657,10 +765,26 @@ function mostrarResultado(){
   }[dominante];
 
   const nombre = datos.nombre || "amiguito/a";
-  const resumen = respuestas.map((c,i) => {
+  const resumen = colores.map((c,i) => {
     const emoji = c === "rojo" ? "🔴" : c === "amarillo" ? "🟡" : "🟢";
     return `${emoji} P${i+1}`;
   }).join("  ");
+
+  /* -------- Detalle pregunta por pregunta -------- */
+  const itemsDetalle = PREGUNTAS.map((p, i) => {
+    const idx = respuestas[i];
+    const op = p.o[idx];
+    const color = op?.color || "verde";
+    return `
+      <div class="item">
+        <span class="punto ${color}"></span>
+        <div class="texto">
+          <b>${i+1}. ${p.t}</b>
+          Tu respuesta: <span class="respuesta">${op ? op.txt : "—"}</span>
+        </div>
+      </div>
+    `;
+  }).join("");
 
   $("resultado-contenido").innerHTML = `
     <div class="emoji">${info.emoji}</div>
@@ -677,6 +801,17 @@ function mostrarResultado(){
       <strong>Conteo:</strong> 🔴 ${conteo.rojo} · 🟡 ${conteo.amarillo} · 🟢 ${conteo.verde}<br>
       <small>${resumen}</small>
     </div>
+
+    <details class="detalle">
+      <summary>🔍 Ver mis respuestas en detalle</summary>
+      <div class="lista">${itemsDetalle}</div>
+      <div class="leyenda">
+        <span><span class="punto rojo"></span>Rojo: debo ocuparme</span>
+        <span><span class="punto amarillo"></span>Amarillo: estar alerta</span>
+        <span><span class="punto verde"></span>Verde: seguir así</span>
+      </div>
+    </details>
+
     <div class="aviso">
       <strong>Recordá:</strong> este test no reemplaza la consulta con un profesional.
       Si sentís que necesitás ayuda, hablá con un adulto de confianza, o solicitá
@@ -715,10 +850,23 @@ async function compartir(){
 }
 
 /* ============================================================
-   INICIO
+   QR DINÁMICO + INICIO
    ============================================================ */
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
   mostrarPantalla("pantalla-bienvenida");
+
+  const cont = document.getElementById("qrcode");
+  if(cont && typeof QRCode !== "undefined"){
+    const url = window.location.href.split("?")[0];
+    new QRCode(cont, {
+      text: url,
+      width: 130,
+      height: 130,
+      colorDark: "#5b21b6",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  }
 });
 </script>
 </body>
