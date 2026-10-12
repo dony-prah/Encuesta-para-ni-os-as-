@@ -459,9 +459,9 @@ const PREGUNTAS = [
 /* ============================================================
    ESTADO
    ============================================================ */
-let indice = 0;                 // pregunta actual
-let respuestas = [];            // colores elegidos
-let datos = {};                 // datos personales
+let indice = 0;
+let respuestas = [];
+let datos = {};
 const $ = id => document.getElementById(id);
 
 /* ============================================================
@@ -516,7 +516,6 @@ function renderPregunta(){
 
     const elegir = () => {
       respuestas[indice] = op.color;
-      // limpiar selección previa
       [...cont.children].forEach(c => {
         c.classList.remove("sel-rojo","sel-amarillo","sel-verde");
       });
@@ -568,11 +567,9 @@ function mostrarResultado(){
   $("progBar").style.width = "100%";
   mostrarPantalla("pantalla-resultado");
 
-  // Contar colores
   const conteo = {rojo:0, amarillo:0, verde:0};
   respuestas.forEach(c => { if(c) conteo[c]++; });
 
-  // Determinar dominante (con prioridad: rojo > amarillo > verde si hay empate)
   let dominante = "verde";
   if(conteo.rojo >= conteo.amarillo && conteo.rojo >= conteo.verde && conteo.rojo > 0){
     dominante = "rojo";
@@ -585,7 +582,7 @@ function mostrarResultado(){
       emoji:"🔴",
       titulo:"¡A ocuparse!",
       badge:"Rojo · Debo ocuparme",
-      mensaje:"Hay varias cosas en tu día a día que no te están haciendo bien. No estás solo/a: pedir ayuda es un acto de valentía y amor propio. Hablá con un adulto de confianza, con tu familia o con un profesional. Merecés estar mejor. 💜"
+      mensaje:"Hay varias cosas en tu día a día que no te están haciendo bien. No estás solo/a: pedir ayuda es un acto de valentía y amor propio. Hablá con un adulto de confianza, o solicitá atención profesional en el Centro de Salud más cercano a tu casa. Merecés estar mejor. 💜"
     },
     amarillo: {
       emoji:"🟡",
@@ -624,8 +621,8 @@ function mostrarResultado(){
     </div>
     <div class="aviso">
       <strong>Recordá:</strong> este test no reemplaza la consulta con un profesional.
-      Si sentís que necesitás ayuda, hablá con un adulto de confianza o comunicate
-      con una línea de ayuda de tu país. 💜
+      Si sentís que necesitás ayuda, hablá con un adulto de confianza, o solicitá
+      atención profesional en el Centro de Salud más cercano a tu casa. 💜
     </div>
   `;
 }
@@ -650,7 +647,6 @@ async function compartir(){
       await navigator.share({ title:"Auto Test · Hábitos Saludables", text:texto, url:url });
     }catch(e){ /* usuario canceló */ }
   } else {
-    // Fallback: copiar al portapapeles
     try{
       await navigator.clipboard.writeText(texto + " " + url);
       alert("¡Enlace copiado al portapapeles! 📋");
